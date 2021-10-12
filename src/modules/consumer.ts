@@ -1,4 +1,5 @@
-import amqp from 'amqplib/callback_api';
+import { Connection } from 'amqplib/callback_api';
+import rabbitMQConnection from '../connections/rabbitMQ';
 
 interface Option {
   recipient: string;
@@ -8,7 +9,17 @@ export const CHANNELS: { [key: string]: any } = {};
 
 export const AWAIT_ACK: { [key: string]: any } = {};
 
-const consumer = (conn: amqp.Connection, option: Option, cb: (data: string) => void) => {
+let conn: Connection;
+
+rabbitMQConnection()
+  .then((connection: any) => {
+    conn = connection;
+  })
+  .catch((error) => {
+    throw error;
+  });
+
+const consumer = (option: Option, cb: (data: string) => void) => {
   conn.createChannel((err, ch) => {
     if (err != null) throw err;
 
