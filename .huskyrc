@@ -1,7 +1,5 @@
 {
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint"
-    }
+  "hooks": {
+    "pre-commit": "lint-staged",
   }
 }
