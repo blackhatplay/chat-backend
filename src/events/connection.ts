@@ -6,9 +6,10 @@ import message from './message';
 
 export default (io: Server, socket: Socket) => {
   const { id: clientID } = socket.handshake.query;
-  console.log(`connection : [${clientID}]`);
 
   if (clientID) {
+    console.log(`connection : [${clientID}]`);
+
     socket.join(clientID);
 
     socket.join(clientID);

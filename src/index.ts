@@ -7,6 +7,7 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 import routes from './routes';
 import connection from './events/connection';
+import db from './connections/db';
 
 const app = express();
 
@@ -29,4 +30,9 @@ io.on('connection', (socket) => {
   connection(io, socket);
 });
 
-httpServer.listen(process.env.PORT, () => console.log(`server is running on port ${process.env.PORT}`));
+db.sync()
+  .then(() => {
+    console.log('Connection to db established');
+    httpServer.listen(process.env.PORT, () => console.log(`server is running on port ${process.env.PORT}`));
+  })
+  .catch((err) => console.log(err));

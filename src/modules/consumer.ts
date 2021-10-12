@@ -28,7 +28,6 @@ const consumer = (option: Option, cb: (data: string) => void) => {
     ch.consume(option.recipient, function (msg) {
       if (msg !== null) {
         const message = msg.content.toString();
-        console.log(message);
 
         cb(msg.content.toString());
         AWAIT_ACK[JSON.parse(message).id] = msg;
