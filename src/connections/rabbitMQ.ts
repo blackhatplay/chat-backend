@@ -2,7 +2,7 @@ import amqp from 'amqplib/callback_api';
 
 const rabbitMQConnection = () => {
   return new Promise((resolve, reject) => {
-    amqp.connect('amqp://localhost', function (err, conn) {
+    amqp.connect(process.env.RABBIT_MQ_CONN_URL!, function (err, conn) {
       if (err != null) reject(err);
       resolve(conn);
     });
