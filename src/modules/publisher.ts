@@ -3,8 +3,8 @@ import { Connection } from 'amqplib/callback_api';
 import rabbitMQConnection from '../connections/rabbitMQ';
 
 interface Option {
-  recipient: string;
-  message: string;
+  chatID: string;
+  message?: string;
   type?: string;
 }
 
@@ -22,8 +22,8 @@ const publisher = (option: Option) => {
   conn.createChannel((err, ch) => {
     if (err != null) throw err;
 
-    ch.assertQueue(option.recipient);
-    ch.sendToQueue(option.recipient, Buffer.from(JSON.stringify(option)));
+    ch.assertQueue(option.chatID);
+    ch.sendToQueue(option.chatID, Buffer.from(JSON.stringify(option)));
   });
 };
 

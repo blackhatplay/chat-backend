@@ -1,8 +1,9 @@
 import { Connection } from 'amqplib/callback_api';
 import rabbitMQConnection from '../connections/rabbitMQ';
+import { MESSAGE_TYPE } from '../constants';
 
 interface Option {
-  recipient: string;
+  chatID: string;
 }
 
 export const CHANNELS: { [key: string]: any } = {};
@@ -19,20 +20,28 @@ rabbitMQConnection()
     throw error;
   });
 
-const consumer = (option: Option, cb: (data: string) => void) => {
+const consumer = (option: Option, cb: (data: any) => void) => {
   conn.createChannel((err, ch) => {
     if (err != null) throw err;
 
-    CHANNELS[option.recipient] = ch;
-    ch.assertQueue(option.recipient);
-    ch.consume(option.recipient, function (msg) {
-      if (msg !== null) {
-        const message = msg.content.toString();
-
-        cb(msg.content.toString());
-        AWAIT_ACK[JSON.parse(message).id] = msg;
-      }
+    ch.on('error', function (err) {
+      console.error('[AMQP] channel error', err.message);
     });
+    ch.on('close', function () {
+      console.log('[AMQP] channel closed');
+    });
+
+    CHANNELS[option.chatID] = ch;
+    ch.assertQueue(option.chatID);
+    ch.consume(
+      option.chatID,
+      function (msg) {
+        if (msg !== null) {
+          cb(msg);
+        }
+      },
+      { noAck: false },
+    );
   });
 };
 

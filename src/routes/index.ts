@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
   res.json({ message: 'Hello World!' });
 });
 
-router.get('/signin', signInController);
-router.get('/verify', authenticate, verify);
+router.post('/signin', signInController);
+router.post('/verify', authenticate, verify);
 
 export default router;

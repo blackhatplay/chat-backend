@@ -1,16 +1,15 @@
-import { v4 as uuidv4 } from 'uuid';
-
 interface Message {
-    recipient: string;
-    message: string;
-    [key: string]: any;
+  chatID: string;
+  message: string;
+  [key: string]: any;
 }
 
-const newMessage = (data: Message) => {
-    return {
-        ...data,
-        id: uuidv4(),
-    };
+const newMessage = (data: Message, attributes: any) => {
+  return {
+    ...data,
+    from: attributes.clientID,
+    mobile: attributes.mobile,
+  };
 };
 
 export default newMessage;
